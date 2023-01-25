@@ -31,7 +31,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build APK Repo
-        uses: KalleDK/actions-apkrepo@v0.0.16
+        uses: KalleDK/actions-apkrepo@v0.0.17
         id: build_apkrepo
         with:
           abuild_packager: ${{ vars.ABUILD_PACKAGER }}
