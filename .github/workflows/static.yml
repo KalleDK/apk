@@ -47,7 +47,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: ${{ steps.build_apkrepo.outputs.repo_path }}
+          path: ${{ steps.build_apkrepo.outputs.repo_path }}/_site
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
