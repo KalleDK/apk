@@ -35,6 +35,7 @@ jobs:
           set -ex
           mkdir -p repo
           echo "${{ vars.ABUILD_NAME }}" > repo/index.html
+          echo "${{ vars.ABUILD_KEY }}" >> repo/index.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
