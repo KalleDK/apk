@@ -33,9 +33,11 @@ jobs:
       - name: Generate Repo
         run: |
           set -ex
+          printf -- '${{ secrets.ABUILD_KEY_PRIV }}' > ${{ vars.ABUILD_KEY_NAME }}.rsa
+          printf -- '${{ secrets.ABUILD_KEY_PUB }}' > ${{ vars.ABUILD_KEY_NAME }}.rsa.pub
           mkdir -p repo
-          echo "${{ vars.ABUILD_NAME }}" > repo/index.html
-          echo "${{ vars.ABUILD_KEY }}" >> repo/index.html
+          echo "${{ vars.ABUILD_KEY_NAME }}" > repo/index.html
+          echo "${{ secrets.ABUILD_KEY }}" >> repo/index.html
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
