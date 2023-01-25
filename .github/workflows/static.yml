@@ -41,6 +41,8 @@ jobs:
           abuild_repo_url: https://kalledk.github.io/apk
       - name: Demo
         run: |
+          ls -la .
+          ls -la ${{ steps.build_apkrepo.outputs.repo_path }}
           echo "\n# Flaf\nfds [Link](x86_64)" > "${{ steps.build_apkrepo.outputs.repo_path }}/flaf.md"
           echo "# Flaf" > "${{ steps.build_apkrepo.outputs.repo_path }}/x86_64/index.md"
       - name: Build with Jekyll
