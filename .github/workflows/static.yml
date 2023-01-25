@@ -23,11 +23,6 @@ concurrency:
 jobs:
   # Single deploy job since we're just deploying
   deploy:
-    env:
-      APKREPO: ./repo
-      PACKAGER: ${{ vars.ABUILD_PACKAGER }}
-      BASE_URL: https://kalledk.github.io
-      REPONAME: apk
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -35,28 +30,19 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Generate Repo
-        run: |
-          set -ex
-          echo "${{ steps.deployment.outputs.page_url }}"
-          echo "::group::Setup Base"
-          mkdir -p ${APKREPO}
-          echo "::group::Setup Keys"
-          printf -- '${{ secrets.ABUILD_KEY_PRIV }}' > ${{ vars.ABUILD_KEY_NAME }}.rsa
-          printf -- '${{ secrets.ABUILD_KEY_PUB }}' > ${{ vars.ABUILD_KEY_NAME }}.rsa.pub
-          cp ${{ vars.ABUILD_KEY_NAME }}.rsa.pub ${APKREPO}/
-          
-          echo "::group::Setup x86_64"
-          mkdir -p ${APKREPO}/x86_64
-          cp ./x86_64/*/*.apk ${APKREPO}/x86_64/
-          apk index -o ${APKREPO}/x86_64/APKINDEX.tar.gz ${APKREPO}/x86_64/*.apk
-          abuild-sign -k ${{ vars.ABUILD_KEY_NAME }}.rsa ${APKREPO}/x86_64/APKINDEX.tar.gz
-          
+      - name: Build APK Repo
+        uses: KalleDK/actions-apkrepo@v0.0.13
+        id: build_apkrepo
+        with:
+          abuild_packager: ${{ var.ABUILD_PACKAGER }}
+          abuild_key_name: ${{ secrets.ABUILD_KEY_NAME }}
+          abuild_key_priv: ${{ secrets.ABUILD_KEY_PRIV }}
+          abuild_key_pub: ${{ secrets.ABUILD_KEY_PUB }}
+          abuild_repo_url: https://kalledk.github.io/apk
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          # Upload entire repository
-          path: ${APKREPO}
+          path: ${{ steps.build_apkrepo.outputs.repo_path }}
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
