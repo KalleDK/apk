@@ -39,6 +39,11 @@ jobs:
           abuild_key_priv: ${{ secrets.ABUILD_KEY_PRIV }}
           abuild_key_pub: ${{ secrets.ABUILD_KEY_PUB }}
           abuild_repo_url: https://kalledk.github.io/apk
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ${{ steps.build_apkrepo.outputs.repo_path }}
+          destination: ${{ steps.build_apkrepo.outputs.repo_path }}/_site
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
